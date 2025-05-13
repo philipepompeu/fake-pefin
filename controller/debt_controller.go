@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,9 +9,8 @@ import (
 )
 
 func DebtHandler(c *gin.Context) {
-	username := c.GetString("username")
+	body, err := io.ReadAll(c.Request.Body)
 
-	body, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Erro ao ler body"})
 		return
@@ -23,6 +22,4 @@ func DebtHandler(c *gin.Context) {
 		"message":         "Debt armazenado com sucesso",
 		"transactionalId": id,
 	})
-
-	c.JSON(200, gin.H{"message": "Token válido!", "username": username})
 }
